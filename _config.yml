@@ -1,7 +1,7 @@
-title: Long Haul
+title: 준모의 영생 블로그
 description: Long Form Jekyll theme built with SASS / COMPASS / SUSY
 
-url: http://lmalma2004.github.io/
+url: https://lmalma2004.github.io/
 baseurl: ""
 paginate_path: "blog/page:num/"
 permalink: blog/:title/
@@ -14,15 +14,9 @@ paginate: 5
 navigation:
   - title: Home
     url: /index.html
-  - title: About
-    url: /about
-  - title: Contact
-    url: /contact
 
 social:
-  github: brianmaierjr
-  twitter: brianmaierjr
-  facebook: brianmaierjr
-  email: brimaidesigns@gmail.com
+  github: lmalma2004
+  email: lmalma2004@naver.com
 
 google_analytics: "UA-58263416-1"
