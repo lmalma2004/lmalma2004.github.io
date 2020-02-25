@@ -1,6 +1,5 @@
-*.gem
-.bundle
-.sass-cache
 _site
-Gemfile.lock
+.sass-cache
 .DS_Store
+.ruby-version
+node_modules
