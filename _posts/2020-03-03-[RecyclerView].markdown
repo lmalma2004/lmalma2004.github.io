@@ -12,7 +12,11 @@ categories: Kotlin
 
 
 
-## Realm + RecyclerView(StaggerdGridLayoutManager) + 이벤트처리
+## Realm + 
+
+## RecyclerView(StaggerdGridLayoutManager) + 
+
+## 이벤트처리
 
 1. adapter 만들기
 
