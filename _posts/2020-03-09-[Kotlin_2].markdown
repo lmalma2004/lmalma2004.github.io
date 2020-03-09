@@ -1,0 +1,334 @@
+---
+layout: post
+title: Kotlin_2
+description: 코틀린 공부
+date:   2020-03-09
+categories: Kotlin
+---
+# 람다로 프로그래밍
+
+람다 식(lambda expression) 또는 람다는 기본적으로 다른 함수에 넘길 수 있는 작은 코드 조각을 뜻한다.
+
+값처럼 여기저기 전달할 수 있는 동작의 모음. 람다를 따로 선언해서 변수에 저장할 수도 있다. 하지만 함수에 인자로 넘기면서 바로 람다를 정의하는 경우가 대부분이다.
+
+람다를 사용하면 쉽게 공통 코드 구조를 라이브러리 함수로 뽑아낼 수 있다.
+
+
+
+ex)
+
+버튼 클릭에 따른 동작을 정의하고 싶다. 그런 경우 클릭 이벤트를 처리하는 리스너를 추가한다.
+
+버튼 클릭 리스너는 onClick이라는 메소드가 들어있는 OnClickListener를 구현해야 한다.
+
+(이 예제는 람다를 메소드가 하나뿐인 무명 객체 대신 사용할 수 있다는 사실을 보여준다.)
+
+`자바`
+
+```java
+button.setOnClickListener(new OnClickListener() {
+
+​	@Override
+
+​	public void onClick(View view){
+
+​		//클릭 시 수행할 동작
+
+​	}
+
+})
+```
+
+무명 내부 클래스를 선언하느라 코드가 번잡스러워졌다. 이와 비슷한 작업을 많이 수행해야 하는 경우 그런 번잡함은 난잡함으로 변해 개발자를 괴롭힌다. 클릭 시 벌어질 동작을 간단히 기술할 수 있는 표기법이 있다면 이런 불필요한 코드를 제거할 수 있을 것이다. 
+
+```kotlin
+button.setOnClickListener{ //클릭 시 수행할 동작 }
+```
+
+
+
+ex)
+
+사람들로 이뤄진 리스트가 있고 그중에 가장 연장자를 찾고 싶다.
+
+```kotlin
+data calss Person(val name: String, val age: Int)
+
+val people = listOf(Person("Alice", 29), Person("Bob", 31))
+
+println(people.maxBy{ it.age }) //나이 프로퍼티를 비교해서 값이 가장 큰 원소 찾기
+```
+
+모든 컬렉션에 대해 maxBy 함수를 호출할 수 있다. maxBy는 가장 큰 원소를 찾기 위해 비교에 사용할 값을 돌려주는 함수를 인자로 받는다. 이 코드는 컬렉션의 원소를 인자로 받아서 (it이 그 인자를 가리킨다) 비교에 사용할 값을 반환한다. 이 예제에서는 컬렉션의 원소가 Person 객체였으므로 이 함수가 반환하는 값은 Person 객체의 age필드에 저장된 나이 정보다.
+
+이런 식으로 단지 함수나 프로퍼티를 반환하는 역할을 수행하는 람다는 멤버 참조로 대치할 수 있다.
+
+```kotlin
+people.maxBy{Person::age}
+```
+
+
+
+### 람다 식의 문법
+
+```kotlin
+{ x: Int, y: Int -> x + y }
+```
+
+1. 항상 중괄호 사이에 위치함
+2. x: Int, y: Int 는 파라미터를 뜻함
+3. x + y 는 본문을 뜻함
+
+
+
+코틀린이 코드를 줄여 쓸 수 있게 제공했던 기능을 제거하고 정식으로 람다를 작성하면 다음과 같다.
+
+```kotlin
+people.maxBy({ p:Person -> p.age })
+```
+
+중괄호 안에 있는 코드는 람다 식이고 그 람다 식을 maxBy 함수에 넘긴다. 람다 식은 Person 타입의 값을 인자로 받아서 인자의 age를 반환한다.
+
+
+
+코틀린에는 함수 호출 시 맨 뒤에 있는 인자가 람다 식이라면 그 람다를 괄호 밖으로 빼낼 수 있다는 문법이 있다.
+
+이 예제에서는 람다가 유일한 인자이므로 마지막 인자이기도 하다.
+
+```kotlin
+people.maxBy() { p:Person -> p.age }
+```
+
+
+
+이 코드 처럼 람다가 어떤 함수의 유일한 인자이고 괄호 뒤에 람다를 썼다면 호출 시 빈 괄호를 없애도 된다.
+
+```kotlin
+people.maxBy { p:Person -> p.age }
+```
+
+이제 구문을 더 간단하게 다듬고 파리미터 타입을 없애자
+
+```kotlin
+people.maxBy { p -> p.age } //파라미터 타입을 생략(컴파일러가 추론)
+```
+
+
+
+로컬 변수처럼 컴파일로는 람다 파라미터의 타입도 추론할 수 있다. 따랏 ㅓ파라미터 타입을 명시할 필요가 없다.
+
+maxBy 함수의 경우 파라미터의 타입은 항상 컬렉션 원소 타입과 같다. 컴파일러는 여러분이 Person 타입의 객체가 들어있는 컬렉션에 대해 maxBy를 호출한다는 사실을 알고 있으므로 람다의 파라미터도 Person이라는 사실을 이해할 수 있다.
+
+람다의 파라미터 이름을 디폴트 이름인 it으로 바꾸면 람다 식을 더 간단하게 만들 수 있다.
+
+람다의 파라미터가 하나뿐이고 그 타입을 컴파일러가 추론할 수 있는 경우 it을 바로 쓸 수 있다.
+
+peole.maxBy { it.age }
+
+
+
+### 멤버 참조
+
+람다를 사용해 코드 블록을 다른 함수에게 인자로 넘기는 방법을 살펴봤다. 하지만 넘기려는 코드가 이미 함수로 선언된 경우는 어떻게 해야 할까? 물론 그 함수를 호출하는 람다를 만들면 된다. 하지만 이는 중복이다.
+
+코틀린에서는 자바8과 마찬가지로 함수를 값으로 바꿀 수 있다. 이때 이중 콜론(::)을 사용한다.
+
+```kotlin
+val getAge = Person::age
+```
+
+::를 사용하는 식을 멤버 참조라고 부른다. 멤버 참조는 프로퍼티나 메소드를 단 하나만 호출하는 함수 값을 만들어준다. ::는 클래스 이름과 여러분이 참조하려는 멤버(프로퍼티나 메소드) 이름 사이에 위치한다.
+
+```kotlin
+val getAge = { person: Person -> person.age }
+```
+
+
+
+### 컬렉션 함수형 API
+
+함수형 프로그래밍 스타일을 사용하면 컬렉션을 다룰 때 편리하다. 대부분의 작업에 라이브러리 함수를 활용할 수 있고 그로 인해 코드를 아주 간결하게 만들 수 있다.
+
+
+
+필수적인 함수: filter와 map
+
+filter와 map은 컬렉션을 활용할 때 기반이 되는 함수다. 대부분의 컬렉션 연산을 이 두 함수를 통해 표현할 수 있다
+
+filter 함수(필터 함수 또는 걸러내는 함수라고 부름)는 컬렉션을 이터레이션하면서 주어진 람다에 각 원소를 넘겨서 람다가 true를 반환하는 원소만 모은다.
+
+ex)
+
+```kotlin
+val list = listOf(1, 2, 3, 4)
+
+println(list.filter{ it % 2 == 0 }) //짝수만 남는다.
+
+val people = listOf(Person("Alice", 29), Person("Bob", 31))
+
+println(people.filter { it.age > 30 }) //30살 이상인 사람만 남는다.
+```
+
+
+
+filter함수는 컬렉션에서 원치 않는 원소를 제거한다. 하지만 filter는 원소를 변환할 수는 없다. 원소를 변환하려면 map 함수를 사용해야 한다.
+
+map함수는 주어진 람다를 컬렉션의 각 원소에 적용한 결과를 모아서 새 컬렉션을 만든다. 
+
+다음과 같이 하면 숫자로 이뤄진 리스트를 각 숫자의 제곱이 모인 리스트로 바꿀 수 있다.
+
+```kotlin
+val list = listOf(1, 2, 3, 4)
+
+println(list.map { it * it })
+```
+
+이런 호출을 쉽게 연쇄시킬 수 있다. 예를 들어 30살 이상인 사람의 이름을 출력해보자
+
+```kotlin
+people.filter{ it.age > 30 }.map(Person::name)
+```
+
+목록에서 가장 나이 많은 사람의 이름을 알고싶다면
+
+val maxAge = people.maxBy(Person::age)!!.age
+
+people.filter{ it.age == maxAge }
+
+
+
+### all, any, count, find: 컬렉션에 술어 적용
+
+컬렉션에 대해 자주 수행하는 연산으로 컬렉션의 모든 원소가 어떤 조건을 만족하는지 판단하는 연산이 있다.
+
+코틀린에서는 all과 any가 이런 연산이다. count 함수는 조건을 만족하는 원소의 개수를 반환하며, find 함수는 조건을 만족하는 첫 번째 원소를 반환한다.
+
+
+
+이런 함수를 살펴보기 위해 어떤 사람의 나이가 27살 이하인지 판단하는 술어 함수 canBeInClub27을 만들자
+
+val canBeInClub27 = { p: Person -> p.age <= 27 }
+
+모든 원소가 이 술어를 만족하는지 궁금하다면 all 함수를 쓴다.
+
+val people = listOf(Person("Alice", 27), Person("Bob", 31))
+
+println(people.all(canBeInClub27)) // false 출력
+
+술어를 만족하는 원소가 하나라도 있는지 궁금하면 any를 쓴다.
+
+println(people.any(canBeInClub27)) //true 출력
+
+술어를 만족하는 원소를 하나 찾고 싶으면 find 함수를 사용한다.
+
+println(people.find(canBeInClub27)) //Person(name=Alice, age=27) 출력
+
+
+
+### 수신 객체 지정 람다: with와 apply
+
+코틀린 표준 라이브러리의 with와 apply
+
+이 두 함수는 매우 편리하며, 많은 사람들이 사용 중이다. 자바의 람다에는 없는 콭르린 람다의 독특한 기능을 설명한다. 그 기능은 바로 수신 객체를 명시하지 않고 람다의 본문 안에서 다른 객체의 메소드를 호출할 수 있게 하는 것이다. 그런 람다를 수신 객체 지정 람다(lambda with recevier)라고 부른다. 
+
+
+
+ex) with함수
+
+```kotlin
+fun alphabet() : String{
+
+​	val result = StringBuilder()
+
+​	for(letter in 'A'..'Z'){
+
+​		result.append(letter)
+
+​	}
+
+​	result.append("\nNow I know the alphabet!")
+
+​	return result.toString()
+
+}
+
+fun alphabet() : String{
+
+​	val stringBuilder = StringBuilder()
+
+​	return with(stringBuilder){ //메소드를 호출하려는 수신 객체를 지정한다.
+
+​		for(letter in 'A'..'Z'){
+
+​			this.append(letter) //"this"를 명시해서 앞에서 지정한 수신객체의 메소드를 호출한다.
+
+​		}
+
+​		append("\nNow I know the alphabet!") //"this"를 생략하고 메소드를 호출한다.
+
+​		this.toString() //람다에서 값을 반환한다.
+
+​	}
+
+}
+
+fun alphabet() = with(StringBuilder()){
+
+​	for(letter in 'A'..'Z'){
+
+​		append(letter)
+
+​	}
+
+​	append("\nNow I know the alphabet!")
+
+​	toString()
+	
+}
+```
+
+with문은 언어가 제공하는 특별한 구문처럼 보인다. 하지만 실제로는 파라미터가 2개 있는 함수다.
+
+여기서 첫 번째 파라미터는 stringBuilder이고, 두 번째 파라미터는 람다다. 람다를 괄호 밖으로 빼내는 관례를 사용함에 따라 전체 함수 호출이 언어가 제공하는 특별 구문처럼 보인다. 
+
+물론 이 방식 대신 with(stringBuilder, {...})라고 쓸 수도 있지만 더 읽기 나빠진다.
+
+with 함수는 첫 번째 인자로 받은 객체를 두 번째 인자로 받은 람다의 수신 객체로 만든다. 인자로 받은 람다 본문에서는 this를 사용해 그 수신 객체에 접근할 수 있다. 일반적인 this와 마찬가지로 this와 점(.)을 사용하지 않고 프로퍼티나 메소드 이름만 사용해도 수신 객체의 멤버에 접근할 수 있다.
+
+with가 반환하는 값은 람다 코드를 실행한 결과며, 그 결과는 람다 식의 본문에 있는 마지막 식의 값이다.
+
+하지만 때로는 람다의 결과 대신 수신 객체가 필요한 경우도 있다. 그럴 때는 apply 라이브러리 함수를 사용할 수 있다.
+
+
+
+```kotlin
+ex) apply
+
+fun alphabet() = StringBuilder().apply{
+
+​	for(letter in 'A'..'Z'){
+
+​		append(letter)
+
+​	}
+
+​	append("\nNow I know the alphabet!")
+
+}
+
+//apply를 TextView 초기화에 사용하기
+
+fun createViewWithCustomAttributes(context: Context) = 
+
+​	TextView(context).apply{
+
+​		text = "Sample Text"
+
+​		textSize = 20.0
+
+​		setPadding(10, 0, 0, 0)
+
+​	}
+```
+
+apply 함수는 거의 with와 같다. 유일한 차이란 apply는 항상 자신에게 전달된 객체(즉 수신 객체)를 반환한다는 점 뿐이다. apply는 확장 함수로 정의돼 있다. apply의 수신 객체가 전달받은 람다의 수신객체가 된다. 이 함수에서 apply를 실행한 결과는 StringBuilder 객체다. 따라서 그 객채의 toString을 호출해서 String 객체를 얻을 수 있다.
