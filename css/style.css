@@ -697,7 +697,7 @@ img, video, audio, iframe, object {
   max-width: 100%; }
 
 .container {
-  max-width: 610px;
+  max-width: 800px;
   padding: 0 20px; }
 
 /***************
@@ -844,7 +844,7 @@ POST STYLING
     background: seagreen;
     display: block;
     height: 2px;
-    width: 150px;
+    width: 300px;
     left: calc(50% - 75px); }
   .post blockquote:after {
     content: "";
@@ -853,7 +853,7 @@ POST STYLING
     background: seagreen;
     display: block;
     height: 2px;
-    width: 150px;
+    width: 300px;
     left: calc(50% - 75px); }
 
 .post .meta {
@@ -1034,7 +1034,7 @@ GLOBAL STYLES
       -webkit-transform-origin: bottom left;
       transform-origin: bottom left; }
   .container {
-    max-width: 800px;
+    max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
     padding: 0;
@@ -1060,7 +1060,7 @@ HEADER STYLING
       top: 50%;
       -webkit-transform: translateY(-50%);
       transform: translateY(-50%);
-      max-width: 800px; }
+      max-width: 1000px; }
     .header h1 {
       font-size: 3em;
       line-height: 1;
@@ -1146,16 +1146,16 @@ FOOTER STYLES
     float: left; }
   .footer .container {
     padding: 1rem 0;
-    max-width: 800px; }
+    max-width: 1000px; }
   /***************
 CONTACT PAGE STYLING
 ***************/
   .contactContent {
-    max-width: 48%;
+    max-width: 70%;
     margin-right: 2%;
     float: left; }
   #contact form {
-    max-width: 48%;
+    max-width: 70%;
     width: 48%;
     float: right;
     margin-right: 0; } }
